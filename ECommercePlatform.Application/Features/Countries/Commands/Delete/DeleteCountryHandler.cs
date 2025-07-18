@@ -21,6 +21,13 @@ namespace ECommercePlatform.Application.Features.Countries.Commands.Delete
                         ? Result.Failure<Domain.Entities.Country>($"Country with ID {id} not found.")
                         : Result.Success(country);
                 })
+                .Bind(async country =>
+                {
+                    var states = await _unitOfWork.States.GetByCountryIdAsync(country.Id);
+                    return states.Count != 0
+                        ? Result.Failure<Domain.Entities.Country>("Cannot delete country. It has associated states.")
+                        : Result.Success(country);
+                })
                 .Tap(async country => await _unitOfWork.Countries
                 .DeleteAsync(country))
                 .Map(_ => AppResult.Success())

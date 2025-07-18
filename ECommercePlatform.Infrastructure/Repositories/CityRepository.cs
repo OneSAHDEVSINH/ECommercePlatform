@@ -10,6 +10,16 @@ namespace ECommercePlatform.Infrastructure.Repositories
 {
     public class CityRepository(AppDbContext context) : GenericRepository<City>(context), ICityRepository
     {
+        public async Task<List<City>> GetByStateIdAsync(Guid stateId)
+        {
+            return await _context.Cities
+                .Where(c => c.StateId == stateId && !c.IsDeleted)
+                .Include(c => c.State)
+                .OrderBy(c => c.Name)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<IReadOnlyList<City>> GetCitiesByStateIdAsync(Guid stateId)
         {
             return await _context.Cities

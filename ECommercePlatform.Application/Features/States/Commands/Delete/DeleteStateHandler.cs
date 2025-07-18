@@ -22,6 +22,13 @@ namespace ECommercePlatform.Application.Features.States.Commands.Delete
                         ? Result.Failure<State>($"State with ID {id} not found.")
                         : Result.Success(state);
                 })
+                .Bind(async state =>
+                {
+                    var cities = await _unitOfWork.Cities.GetByStateIdAsync(state.Id);
+                    return cities.Count != 0
+                        ? Result.Failure<State>("Cannot delete state. It has associated cities.")
+                        : Result.Success(state);
+                })
                 .Tap(async state => await _unitOfWork.States.DeleteAsync(state))
                 .Map(_ => AppResult.Success())
                 .Match(

@@ -61,6 +61,18 @@ public class AuditBehavior<TRequest, TResponse>(
                 }
                 else if (entry.State == EntityState.Modified)
                 {
+                    var entityType = entry.Entity.GetType().Name;
+                    foreach (var property in entry.OriginalValues.Properties)
+                    {
+                        var originalValue = entry.OriginalValues[property];
+                        var currentValue = entry.CurrentValues[property];
+
+                        // log the changes
+                        logger.LogInformation(
+                            "Entity {EntityType} property {Property} changed from {OldValue} to {NewValue}",
+                            entityType, property.Name, originalValue, currentValue
+                        );
+                    }
                     if (entry.Entity is BaseEntity baseEntity)
                     {
                         baseEntity.ModifiedBy = userId;

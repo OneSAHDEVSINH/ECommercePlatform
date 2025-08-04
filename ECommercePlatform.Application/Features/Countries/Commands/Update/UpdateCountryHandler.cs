@@ -40,7 +40,7 @@ public class UpdateCountryHandler(IUnitOfWork unitOfWork) : IRequestHandler<Upda
                             request.Code ?? string.Empty
                         );
                         country.IsActive = request.IsActive;
-
+                        
                         await _unitOfWork.Countries.UpdateAsync(country);
                     })
                     .Map(_ => AppResult.Success())

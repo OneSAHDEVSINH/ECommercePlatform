@@ -25,7 +25,7 @@ public class AuditBehavior<TRequest, TResponse>(
             ? currentUserService.UserId ?? currentUserService.Email ?? "system"
             : "system";
 
-
+        logger.LogInformation("AuditBehavior running for {RequestType}", typeof(TRequest).Name);
         // Handler runs first (entities are added/modified here)
         var response = await next();
 

@@ -28,7 +28,7 @@
                 Route = route,
                 Icon = icon,
                 DisplayOrder = displayOrder,
-                CreatedOn = DateTime.UtcNow,
+                CreatedOn = DateTime.Now,
                 IsActive = true
             };
         }
@@ -45,7 +45,7 @@
             Route = route;
             Icon = icon;
             DisplayOrder = displayOrder;
-            ModifiedOn = DateTime.UtcNow;
+            ModifiedOn = DateTime.Now;
         }
     }
 }

@@ -21,8 +21,8 @@ namespace ECommercePlatform.Application.Features.Roles.Commands.Create
                 var role = Role.Create(
                     Guid.NewGuid(),
                     request.Name,
-                    request.Description ?? string.Empty,
-                    request.CreatedBy ?? "system");
+                    request.Description ?? string.Empty
+                    );
 
                 role.IsActive = request.IsActive;
                 return Result.Success(role);
@@ -46,7 +46,7 @@ namespace ECommercePlatform.Application.Features.Roles.Commands.Create
                         perm.CanDelete
                     );
 
-                    rolePermission.SetCreatedBy(request.CreatedBy ?? "system");
+                    //rolePermission.SetCreatedBy(request.CreatedBy ?? "system");
                     await _unitOfWork.RolePermissions.AddAsync(rolePermission);
                 }
 

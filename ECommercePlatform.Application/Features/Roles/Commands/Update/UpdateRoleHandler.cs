@@ -66,7 +66,7 @@ namespace ECommercePlatform.Application.Features.Roles.Commands.Update
                                     perm.CanDelete
                                 );
 
-                                rolePermission.SetCreatedBy(request.ModifiedBy ?? "system");
+                                //rolePermission.SetCreatedBy(request.ModifiedBy ?? "system");
                                 await _unitOfWork.RolePermissions.AddAsync(rolePermission);
                             }
                         }

@@ -1,58 +1,90 @@
-﻿using ECommercePlatform.Application.Common.Interfaces;
+﻿using ECommercePlatform.Application.Interfaces;
 using ECommercePlatform.Application.Interfaces.IUserAuth;
+using ECommercePlatform.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ECommercePlatform.Application.Common.Behaviors
+namespace ECommercePlatform.Application.Common.Behaviors;
+
+public class AuditBehavior<TRequest, TResponse>(
+    IUnitOfWork unitOfWork,
+    ICurrentUserService currentUserService,
+    ILogger<AuditBehavior<TRequest, TResponse>> logger
+) : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
-    public class AuditBehavior<TRequest, TResponse>(
-        ICurrentUserService currentUserService,
-        ILogger<AuditBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+    public async Task<TResponse> Handle(
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
+        CancellationToken cancellationToken)
     {
-        private readonly ICurrentUserService _currentUserService = currentUserService;
-        private readonly ILogger<AuditBehavior<TRequest, TResponse>> _logger = logger;
+        var dbContext = unitOfWork.DbContext;
+        var now = DateTime.UtcNow;
+        var userId = currentUserService.IsAuthenticated
+            ? currentUserService.UserId ?? currentUserService.Email ?? "system"
+            : "system";
 
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+
+        // Handler runs first (entities are added/modified here)
+        var response = await next();
+
+        // Set audit fields on tracked entities
+        if (dbContext != null)
         {
-            // For create operations
-            if (request is IAuditableCreateRequest createRequest)
+            
+            foreach (var entry in dbContext.ChangeTracker.Entries())
             {
-                if (_currentUserService.IsAuthenticated)
+                logger.LogInformation("Setting audit fields for {EntityType}", entry.Entity.GetType().Name);
+                if (entry.State == EntityState.Added)
                 {
-                    var userId = _currentUserService.UserId;
-                    var userIdentifier = !string.IsNullOrEmpty(userId)
-                        ? userId
-                        : _currentUserService.Email ?? "system";
-
-                    createRequest.CreatedBy = userIdentifier;
-                    createRequest.CreatedOn = DateTime.Now;
-
-                    _logger.LogInformation("Setting CreatedBy to {UserId} for {RequestType}",
-                        userIdentifier, typeof(TRequest).Name);
+                    if (entry.Entity is BaseEntity baseEntity)
+                    {
+                        baseEntity.CreatedBy ??= userId;
+                        baseEntity.CreatedOn = baseEntity.CreatedOn == default ? now : baseEntity.CreatedOn;
+                    }
+                    else if (entry.Entity is Role role)
+                    {
+                        role.CreatedBy ??= userId;
+                        role.CreatedOn = role.CreatedOn == default ? now : role.CreatedOn;
+                    }
+                    else if (entry.Entity is User user)
+                    {
+                        user.CreatedBy ??= userId;
+                        user.CreatedOn = user.CreatedOn == default ? now : user.CreatedOn;
+                    }
+                    else if (entry.Entity is UserRole userRole)
+                    {
+                        userRole.CreatedBy ??= userId;
+                        userRole.CreatedOn = userRole.CreatedOn == default ? now : userRole.CreatedOn;
+                    }
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    if (entry.Entity is BaseEntity baseEntity)
+                    {
+                        baseEntity.ModifiedBy = userId;
+                        baseEntity.ModifiedOn = now;
+                    }
+                    else if (entry.Entity is Role role)
+                    {
+                        role.ModifiedBy = userId;
+                        role.ModifiedOn = now;
+                    }
+                    else if (entry.Entity is User user)
+                    {
+                        user.ModifiedBy = userId;
+                        user.ModifiedOn = now;
+                    }
+                    else if (entry.Entity is UserRole userRole)
+                    {
+                        userRole.ModifiedBy = userId;
+                        userRole.ModifiedOn = now;
+                    }
                 }
             }
-
-            // For update operations
-            if (request is IAuditableUpdateRequest updateRequest)
-            {
-                if (_currentUserService.IsAuthenticated)
-                {
-                    var userId = _currentUserService.UserId;
-                    var userIdentifier = !string.IsNullOrEmpty(userId)
-                        ? userId
-                        : _currentUserService.Email ?? "system";
-
-                    updateRequest.ModifiedBy = userIdentifier;
-                    updateRequest.ModifiedOn = DateTime.Now;
-
-                    _logger.LogInformation("Setting ModifiedBy to {UserId} for {RequestType}",
-                        userIdentifier, typeof(TRequest).Name);
-                }
-            }
-
-            // Continue with the next handler in the pipeline
-            return await next(cancellationToken);
         }
+
+        return response;
     }
 }

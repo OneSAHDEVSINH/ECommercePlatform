@@ -46,6 +46,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\Interfaces\IAuditableCreateRequest.cs" />
+    <Compile Remove="Common\Interfaces\IAuditableRequest.cs" />
+    <Compile Remove="Common\Interfaces\IAuditableUpdateRequest.cs" />
     <Compile Remove="Services\AuthService.cs" />
     <Compile Remove="Services\CityService.cs" />
     <Compile Remove="Services\CountryService.cs" />

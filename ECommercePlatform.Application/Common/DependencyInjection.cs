@@ -19,7 +19,6 @@ namespace ECommercePlatform.Application.Common
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuditBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));

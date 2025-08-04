@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ECommercePlatform.Application.Features.Users.Commands.Create
 {
-    public record CreateUserCommand(string FirstName, string LastName, string Email, string PhoneNumber, string DateOfBirth, string Bio) : IRequest<AppResult<UserDto>>, ITransactionalBehavior, IAuditableCreateRequest
+    public record CreateUserCommand(string FirstName, string LastName, string Email, string PhoneNumber, string DateOfBirth, string Bio) : IRequest<AppResult<UserDto>>, ITransactionalBehavior
     {
         public required string FirstName { get; init; } = FirstName?.Trim() ?? string.Empty;
         public required string LastName { get; init; } = LastName?.Trim() ?? string.Empty;
@@ -19,7 +19,5 @@ namespace ECommercePlatform.Application.Features.Users.Commands.Create
         public string? Bio { get; init; } = Bio?.Trim() ?? string.Empty;
         public List<Guid>? RoleIds { get; init; } = [];
         public bool IsActive { get; init; } = true;
-        public string? CreatedBy { get; set; }
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
 }

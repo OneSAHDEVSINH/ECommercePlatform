@@ -44,13 +44,13 @@ namespace ECommercePlatform.Infrastructure
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            UpdateAuditFields();
+            //UpdateAuditFields();
             return base.SaveChangesAsync(cancellationToken);
         }
 
         public override int SaveChanges()
         {
-            UpdateAuditFields();
+            //UpdateAuditFields();
             return base.SaveChanges();
         }
 

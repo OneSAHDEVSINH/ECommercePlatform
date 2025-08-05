@@ -100,6 +100,7 @@ namespace ECommercePlatform.Application.Features.Users.Commands.Update
                         }
                     }
                 }
+                await _unitOfWork.Users.UpdateAsync(user);
 
                 // Reload user with updated data
                 var updatedUser = await _unitOfWork.Users.GetByIdAsync(user.Id);

@@ -55,6 +55,7 @@ namespace ECommercePlatform.Application.Features.Users.Commands.Create
                 };
 
                 var result = await _unitOfWork.UserManager.CreateAsync(user, request.Password);
+                await _unitOfWork.Users.AddAsync(user);
                 if (!result.Succeeded)
                 {
                     var errors = string.Join(", ", result.Errors.Select(e => e.Description));

@@ -1,0 +1,16 @@
+{
+  "RoleId": "f4623716-748a-4769-7641-08ddb2f78a7e",
+  "ModuleId": "24203e63-035e-4119-9e6a-27b2ccbf5c79",
+  "CanView": false,
+  "CanAddEdit": false,
+  "CanDelete": false,
+  "Role": null,
+  "Module": null,
+  "Id": "4bbf19af-fb1a-467d-b789-e80a9323b4dc",
+  "CreatedOn": "2025-08-05T10:19:34.0751289",
+  "CreatedBy": "e65a3a8a-2407-4965-9b71-b9a1d8e2c34f",
+  "ModifiedOn": "0001-01-01T00:00:00",
+  "ModifiedBy": null,
+  "IsActive": true,
+  "IsDeleted": false
+}

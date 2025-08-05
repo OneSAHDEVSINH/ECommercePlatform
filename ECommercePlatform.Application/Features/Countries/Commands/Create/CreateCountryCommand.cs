@@ -9,4 +9,5 @@ public record CreateCountryCommand(string Name, string Code) : IRequest<AppResul
 {
     public required string Name { get; init; } = Name?.Trim() ?? string.Empty;
     public required string Code { get; init; } = Code?.Trim() ?? string.Empty;
+    public bool IsActive { get; init; }
 }

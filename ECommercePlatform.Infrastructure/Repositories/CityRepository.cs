@@ -109,7 +109,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 // First include related entities
                 var queryWithInclude = query
                     .Include(c => c.State)
-                    .ThenInclude(s => s!.Country);
+                    .ThenInclude(s => s!.Country)
+                    .AsNoTracking();
 
                 // Then apply search if text is provided
                 if (!string.IsNullOrWhiteSpace(searchText))

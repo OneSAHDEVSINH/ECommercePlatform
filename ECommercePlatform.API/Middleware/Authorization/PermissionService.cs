@@ -43,6 +43,7 @@ namespace ECommercePlatform.API.Middleware.Authorization
                             !rp.Module.IsDeleted &&
                             rp.IsActive &&
                             !rp.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
 
             // Check if any role has the requested permission
@@ -69,6 +70,7 @@ namespace ECommercePlatform.API.Middleware.Authorization
                             !rp.Module.IsDeleted &&
                             rp.IsActive &&
                             !rp.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
 
             // Group by module and aggregate permissions

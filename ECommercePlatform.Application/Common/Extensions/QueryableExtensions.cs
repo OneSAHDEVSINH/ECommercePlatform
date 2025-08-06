@@ -12,7 +12,8 @@ namespace ECommercePlatform.Application.Common.Extensions
         {
             return query
                 .Include(rp => rp.Role)
-                .Include(rp => rp.Module);
+                .Include(rp => rp.Module)
+                .AsNoTracking();
         }
 
         public static IQueryable<RolePermission> WhereActive(this IQueryable<RolePermission> query)

@@ -26,6 +26,7 @@ namespace ECommercePlatform.Application.Features.Roles.Queries.GetAllRoles
                     var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                         .Include(rp => rp.Module)
                         .Where(rp => rp.RoleId == role.Id && !rp.IsDeleted)
+                        .AsNoTracking()
                         .ToListAsync(cancellationToken);
 
                     var permissionsDto = rolePermissions

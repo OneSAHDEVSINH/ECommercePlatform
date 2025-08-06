@@ -15,6 +15,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
         {
             return await _context.Modules
                 .Include(m => m.RolePermissions)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id && !m.IsDeleted);
         }
 
@@ -24,6 +25,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(m => m.RolePermissions)
                 .Where(m => !m.IsDeleted)
                 .OrderBy(m => m.DisplayOrder)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -33,6 +35,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(m => m.RolePermissions)
                 .Where(m => m.IsActive && !m.IsDeleted)
                 .OrderBy(m => m.DisplayOrder)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -40,6 +43,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
         {
             return await _context.Modules
                 .Include(m => m.RolePermissions)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Route != null &&
                                          m.Route.ToLower() == route.ToLower() &&
                                          !m.IsDeleted);
@@ -162,7 +166,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
             {
                 // First include related entities
                 var queryWithInclude = query
-                    .Include(m => m.RolePermissions);
+                    .Include(m => m.RolePermissions)
+                    .AsNoTracking();
 
                 // Then apply search if text is provided
                 if (!string.IsNullOrWhiteSpace(searchText))

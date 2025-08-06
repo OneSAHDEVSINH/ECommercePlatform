@@ -1,4 +1,4 @@
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using ECommercePlatform.Application.Common.Helpers;
 using ECommercePlatform.Application.DTOs;
 using ECommercePlatform.Application.Interfaces.IRepositories;
@@ -19,6 +19,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
         public async Task<User?> FindUserByEmailAsync(string email)
         {
             return await _context.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted);
         }
 
@@ -27,6 +28,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                     .ThenInclude(ur => ur.Role)
                         .ThenInclude(r => r!.RolePermissions)
                             .ThenInclude(rp => rp.Module)
+            .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
 
         public new async Task<List<User>> GetAllAsync()
@@ -35,6 +37,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
                 .Where(u => !u.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -43,6 +46,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.UserRoles)
                 .Where(u => u.UserRoles.Any(ur => ur.RoleId == roleId) && !u.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -52,6 +56,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
                 .Where(u => u.IsActive && !u.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -187,6 +192,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var queryWithInclude = includeRoles
                     ? query.Include(u => u.UserRoles)
                         .ThenInclude(ur => ur.Role)
+                        .AsNoTracking()
                     : query;
 
                 // Then apply search if text is provided
@@ -211,6 +217,10 @@ namespace ECommercePlatform.Infrastructure.Repositories
             Guid? roleId = null,
             CancellationToken cancellationToken = default)
         {
+            // DEBUGGING: Add logging here
+            Console.WriteLine($"🔍 DEBUGGING: UserRepository.GetPagedUserDtosAsync called!");
+            Console.WriteLine($"🔍 Stack Trace: {Environment.StackTrace}");
+
             var pagedEntities = await GetPagedUsersAsync(
                 request,
                 activeOnly,
@@ -227,6 +237,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var userRolesWithRoles = await _context.UserRoles
                     .Include(ur => ur.Role)
                     .Where(ur => userIds.Contains(ur.UserId) && !ur.IsDeleted && ur.IsActive && ur.Role!.IsActive && !ur.Role.IsDeleted)
+                    .AsNoTracking()
                     .ToListAsync(cancellationToken);
 
                 // Group by user ID for easy lookup

@@ -51,6 +51,15 @@ public class AuditBehavior<TRequest, TResponse>(
         var userId = currentUserService.IsAuthenticated
             ? currentUserService.UserId ?? currentUserService.Email ?? "system"
             : "system";
+        var requestTypeName = typeof(TRequest).Name;
+
+        // DEBUGGING: Log when GetPagedUsersQuery is encountered
+        if (requestTypeName.Contains("GetPagedUsersQuery"))
+        {
+            _logger.LogWarning("🔍 DEBUGGING: GetPagedUsersQuery detected in AuditBehavior!");
+            _logger.LogWarning("🔍 Stack Trace: {StackTrace}", Environment.StackTrace);
+            _logger.LogWarning("🔍 Request details: {@Request}", request);
+        }
 
         _logger.LogInformation("AuditBehavior running for {RequestType} by user {UserId} at {Time}", typeof(TRequest).Name, userId, now);
         _logger.LogDebug("Request details: {@Request}", request);
@@ -67,16 +76,44 @@ public class AuditBehavior<TRequest, TResponse>(
             throw;
         }
 
+        // Skip auditing for queries - only audit commands that modify data
+        //if (requestTypeName.Contains("Query", StringComparison.OrdinalIgnoreCase))
+        //{
+        //    _logger.LogDebug("Skipping audit for query request: {RequestType}", requestTypeName);
+        //    return response;
+        //}
+
+        // Skip auditing for queries - only audit commands that modify data
+        //if (requestTypeName.Contains("Query", StringComparison.OrdinalIgnoreCase))
+        //{
+        //    _logger.LogDebug("Skipping audit for query request: {RequestType}", requestTypeName);
+
+        //    // DEBUGGING: Extra logging for GetPagedUsersQuery
+        //    if (requestTypeName.Contains("GetPagedUsersQuery"))
+        //    {
+        //        _logger.LogWarning("🔍 DEBUGGING: Skipping audit for GetPagedUsersQuery - this should prevent JSON file generation");
+        //    }
+
+        //    return response;
+        //}
+
         if (dbContext != null)
         {
             var auditEntries = new List<object>();
 
             foreach (var entry in dbContext.ChangeTracker.Entries())
             {
+                // DEBUGGING: Log entity tracking for GetPagedUsersQuery
+                if (requestTypeName.Contains("GetPagedUsersQuery"))
+                {
+                    _logger.LogError("🚨 ERROR: Entity {EntityType} is being tracked for GetPagedUsersQuery! State: {State}",
+                        entry.Entity.GetType().Name, entry.State);
+                }
                 var entityType = entry.Entity.GetType().Name;
                 var auditEntry = new
                 {
                     EntityType = entityType,
+                    Request = typeof(TRequest).Name,
                     State = entry.State.ToString(),
                     UserId = userId,
                     Time = now,
@@ -145,21 +182,25 @@ public class AuditBehavior<TRequest, TResponse>(
                     }
                 }
 
-                if (entry.CurrentValues.Properties.Count > 0)
-                {
-                    Directory.CreateDirectory(AuditFolder);
-                    var fileName = $"{typeof(TRequest).Name}_{now:yyyyMMdd_HHmmss_fff}_{Guid.NewGuid()}.json";
-                    var filePath = Path.Combine(AuditFolder, fileName);
-                    var options = new JsonSerializerOptions { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
-                    await File.WriteAllTextAsync(filePath, JsonSerializer.Serialize(entry.CurrentValues.ToObject(), options), cancellationToken);
-                    _logger.LogInformation("Audit log written to {FilePath}", filePath);
-                }
+                //if (entry.CurrentValues.Properties.Count > 0)
+                //{
+                //    Directory.CreateDirectory(AuditFolder);
+                //    var fileName = $"{typeof(TRequest).Name}_{now:yyyyMMdd_HHmmss_fff}_{Guid.NewGuid()}.json";
+                //    var filePath = Path.Combine(AuditFolder, fileName);
+                //    var options = new JsonSerializerOptions { WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+                //    await File.WriteAllTextAsync(filePath, JsonSerializer.Serialize(entry.CurrentValues.ToObject(), options), cancellationToken);
+                //    _logger.LogInformation("Audit log written to {FilePath}", filePath);
+                //}
 
                 auditEntries.Add(auditEntry);
             }
 
             if (auditEntries.Count > 0)
             {
+                // DEBUGGING: Log JSON file creation
+                _logger.LogWarning("🔍 DEBUGGING: Creating audit JSON file for {RequestType} with {Count} entries",
+                    requestTypeName, auditEntries.Count);
+
                 Directory.CreateDirectory(AuditFolder);
                 var fileName = $"{typeof(TRequest).Name}_{now:yyyyMMdd_HHmmss_fff}_{Guid.NewGuid()}.json";
                 var filePath = Path.Combine(AuditFolder, fileName);

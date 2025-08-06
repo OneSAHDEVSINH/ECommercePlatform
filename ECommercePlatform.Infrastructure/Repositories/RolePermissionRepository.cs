@@ -15,6 +15,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(rp => rp.Role)
                 .Include(rp => rp.Module)
                 .Where(rp => rp.ModuleId == moduleId && !rp.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -22,10 +23,12 @@ namespace ECommercePlatform.Infrastructure.Repositories
         {
             var rolePermissions = await _context.RolePermissions
                 .Where(rp => rp.RoleId == roleId)
+                //.AsNoTracking()
                 .ToListAsync();
 
-            _context.RolePermissions.RemoveRange(rolePermissions);
-            await _context.SaveChangesAsync();
+            if (rolePermissions.Count > 0)
+                _context.RolePermissions.RemoveRange(rolePermissions);
+            //await _context.SaveChangesAsync();
         }
 
         public async Task<bool> AnyAsync(Expression<Func<RolePermission, bool>> predicate)
@@ -96,7 +99,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
             {
                 var queryWithInclude = query
                     .Include(rp => rp.Role)
-                    .Include(rp => rp.Module);
+                    .Include(rp => rp.Module)
+                    .AsNoTracking();
 
                 if (!string.IsNullOrWhiteSpace(searchText))
                     return ApplyRolePermissionSearch(queryWithInclude, searchText);

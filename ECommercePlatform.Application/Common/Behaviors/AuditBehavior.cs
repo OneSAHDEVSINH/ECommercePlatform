@@ -69,11 +69,11 @@ public class AuditBehavior<TRequest, TResponse>(
         }
 
         // Skip auditing for queries - only audit commands that modify data
-        //if (requestTypeName.Contains("Query", StringComparison.OrdinalIgnoreCase))
-        //{
-        //    _logger.LogDebug("Skipping audit for query request: {RequestType}", requestTypeName);
-        //    return response;
-        //}
+        if (requestTypeName.Contains("Query", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogDebug("Skipping audit for query request: {RequestType}", requestTypeName);
+            return response;
+        }
 
         if (dbContext != null)
         {

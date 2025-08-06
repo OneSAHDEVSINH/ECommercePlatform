@@ -2,7 +2,7 @@
 
 namespace ECommercePlatform.Application.Models
 {
-    public class PagedRequest
+    public record PagedRequest
     {
         private const int MaxPageSize = 100;
         private const int DefaultPageSize = 10;

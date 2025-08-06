@@ -143,7 +143,11 @@ namespace ECommercePlatform.Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(currentUserIdStr) && Guid.TryParse(currentUserIdStr, out var currentUserId))
             {
-                var currentUser = await _context.Users.FindAsync([currentUserId], cancellationToken: cancellationToken);
+                //var currentUser = await _context.Users.FindAsync([currentUserId], cancellationToken: cancellationToken);
+                var currentUser = await _context.Users
+                    .AsNoTracking().
+                    FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+
                 if (currentUser != null)
                 {
                     isSuperAdminViewing = _superAdminService.IsSuperAdminEmail(currentUser.Email!);
@@ -193,7 +197,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                     ? query.Include(u => u.UserRoles)
                         .ThenInclude(ur => ur.Role)
                         .AsNoTracking()
-                    : query;
+                    : query.AsNoTracking();
 
                 // Then apply search if text is provided
                 if (!string.IsNullOrWhiteSpace(searchText))
@@ -217,10 +221,6 @@ namespace ECommercePlatform.Infrastructure.Repositories
             Guid? roleId = null,
             CancellationToken cancellationToken = default)
         {
-            // DEBUGGING: Add logging here
-            Console.WriteLine($"🔍 DEBUGGING: UserRepository.GetPagedUserDtosAsync called!");
-            Console.WriteLine($"🔍 Stack Trace: {Environment.StackTrace}");
-
             var pagedEntities = await GetPagedUsersAsync(
                 request,
                 activeOnly,

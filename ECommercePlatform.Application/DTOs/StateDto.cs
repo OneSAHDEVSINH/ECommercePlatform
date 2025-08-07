@@ -3,7 +3,7 @@ using ECommercePlatform.Domain.Entities;
 
 namespace ECommercePlatform.Application.DTOs
 {
-    public class StateDto
+    public record StateDto
     {
         public Guid Id { get; init; }
         public string? Name { get; init; }
@@ -30,14 +30,14 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class CreateStateDto
+    public record CreateStateDto
     {
         public required string Name { get; init; }
         public required string Code { get; init; }
         public Guid CountryId { get; init; }
     }
 
-    public class UpdateStateDto
+    public record UpdateStateDto
     {
         public string? Name { get; init; }
         public string? Code { get; init; }

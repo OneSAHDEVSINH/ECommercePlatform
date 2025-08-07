@@ -4,7 +4,7 @@ using ECommercePlatform.Domain.Enums;
 
 namespace ECommercePlatform.Application.DTOs
 {
-    public class UserDto
+    public record UserDto
     {
         public Guid Id { get; init; }
         public string? FirstName { get; init; }
@@ -41,7 +41,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class UpdateUserDto
+    public record UpdateUserDto
     {
         public string? FirstName { get; init; }
         public string? LastName { get; init; }
@@ -72,7 +72,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class UserListDto
+    public record UserListDto
     {
         public Guid Id { get; init; }
         public string? FirstName { get; init; }

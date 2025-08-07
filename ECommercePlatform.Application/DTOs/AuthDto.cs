@@ -1,19 +1,19 @@
 namespace ECommercePlatform.Application.DTOs
 {
-    public class LoginDto
+    public record LoginDto
     {
         public string? Email { get; init; }
         public string? Password { get; init; }
     }
 
-    public class AuthResultDto
+    public record AuthResultDto
     {
         public string? Token { get; init; }
         public UserDto? User { get; init; }
         public List<UserPermissionDto>? Permissions { get; init; }
     }
 
-    public class UserPermissionDto
+    public record UserPermissionDto
     {
         public required string ModuleName { get; init; }
         public bool CanView { get; init; }

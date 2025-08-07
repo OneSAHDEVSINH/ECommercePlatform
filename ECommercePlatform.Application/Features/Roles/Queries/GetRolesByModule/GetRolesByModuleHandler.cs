@@ -22,7 +22,9 @@ namespace ECommercePlatform.Application.Features.Roles.Queries.GetRolesByModule
                 // Get role permissions for this module
                 var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                     .Include(rp => rp.Role)
+                    .AsSplitQuery()
                     .Include(rp => rp.Module)
+                    .AsSplitQuery()
                     .Where(rp => rp.ModuleId == request.ModuleId && !rp.IsDeleted)
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
@@ -62,6 +64,7 @@ namespace ECommercePlatform.Application.Features.Roles.Queries.GetRolesByModule
 
             var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                 .Include(rp => rp.Module)
+                .AsSplitQuery()
                 .Where(rp => rp.RoleId == role.Id && !rp.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);

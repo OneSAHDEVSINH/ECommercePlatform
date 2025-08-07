@@ -16,6 +16,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Module)
+                    .AsSplitQuery()
                     .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
         }
@@ -48,6 +49,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Module)
+                    .AsSplitQuery()
                     .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
         }
@@ -97,6 +99,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Module)
+                    .AsSplitQuery()
                     .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
         }
@@ -132,6 +135,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var queryWithInclude = query
                     .Include(r => r.RolePermissions)
                         .ThenInclude(rp => rp.Module)
+                        .AsSplitQuery()
                         .AsNoTracking(); // Changed from rp.Permission
 
                 // Then apply search if text is provided

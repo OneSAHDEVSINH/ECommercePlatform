@@ -15,6 +15,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Cities
                 .Where(c => c.StateId == stateId && !c.IsDeleted)
                 .Include(c => c.State)
+                .AsSplitQuery()
                 .OrderBy(c => c.Name)
                 .AsNoTracking()
                 .ToListAsync();
@@ -110,6 +111,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var queryWithInclude = query
                     .Include(c => c.State)
                     .ThenInclude(s => s!.Country)
+                    .AsSplitQuery()
                     .AsNoTracking();
 
                 // Then apply search if text is provided

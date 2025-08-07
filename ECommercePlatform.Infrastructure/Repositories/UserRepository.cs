@@ -28,6 +28,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                     .ThenInclude(ur => ur.Role)
                         .ThenInclude(r => r!.RolePermissions)
                             .ThenInclude(rp => rp.Module)
+            .AsSplitQuery()
             .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
 
@@ -36,6 +37,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
+                .AsSplitQuery()
                 .Where(u => !u.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
@@ -55,6 +57,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
+                    .AsSplitQuery()
                 .Where(u => u.IsActive && !u.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
@@ -196,6 +199,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var queryWithInclude = includeRoles
                     ? query.Include(u => u.UserRoles)
                         .ThenInclude(ur => ur.Role)
+                        .AsSplitQuery()
                         .AsNoTracking()
                     : query.AsNoTracking();
 

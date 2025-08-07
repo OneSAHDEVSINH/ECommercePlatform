@@ -16,7 +16,9 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(ur => ur.Role)
                     .ThenInclude(r => r!.RolePermissions)
                         .ThenInclude(rp => rp.Module)
+                        .AsSplitQuery()
                 .Include(ur => ur.User)
+                .AsSplitQuery()
                 .Where(ur => ur.UserId == userId && !ur.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();

@@ -12,7 +12,9 @@ namespace ECommercePlatform.Application.Common.Extensions
         {
             return query
                 .Include(rp => rp.Role)
+                .AsSplitQuery()
                 .Include(rp => rp.Module)
+                .AsSplitQuery()
                 .AsNoTracking();
         }
 

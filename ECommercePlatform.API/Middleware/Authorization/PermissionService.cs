@@ -37,6 +37,7 @@ namespace ECommercePlatform.API.Middleware.Authorization
             // Get role permissions for these roles and the specified module
             var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                 .Include(rp => rp.Module)
+                .AsSplitQuery()
                 .Where(rp => roleIds.Contains(rp.RoleId) &&
                             rp.Module!.Name == moduleName &&
                             rp.Module.IsActive &&
@@ -65,6 +66,7 @@ namespace ECommercePlatform.API.Middleware.Authorization
             // Get all role permissions for these roles
             var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                 .Include(rp => rp.Module)
+                .AsSplitQuery()
                 .Where(rp => roleIds.Contains(rp.RoleId) &&
                             rp.Module!.IsActive &&
                             !rp.Module.IsDeleted &&

@@ -1,6 +1,7 @@
 using ECommercePlatform.Application.Interfaces.IRepositories;
 using ECommercePlatform.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommercePlatform.Application.Interfaces
 {
@@ -17,6 +18,7 @@ namespace ECommercePlatform.Application.Interfaces
         UserManager<User> UserManager { get; }
         RoleManager<Role> RoleManager { get; }
         SignInManager<User> SignInManager { get; }
+        DbContext DbContext { get; }
         // Shall be added more repositories as properties
 
         Task<int> SaveChangesAsync();

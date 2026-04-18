@@ -2,7 +2,7 @@
 
 namespace ECommercePlatform.Application.DTOs
 {
-    public class RoleDto
+    public record RoleDto
     {
         public Guid Id { get; init; }
         public string? Name { get; init; }
@@ -36,7 +36,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class RoleModulePermissionDto
+    public record RoleModulePermissionDto
     {
         public Guid ModuleId { get; init; }
         public string? ModuleName { get; init; }
@@ -47,7 +47,7 @@ namespace ECommercePlatform.Application.DTOs
         public bool CanDelete { get; init; }
     }
 
-    public class RoleListDto
+    public record RoleListDto
     {
         public Guid Id { get; init; }
         public string? Name { get; init; }

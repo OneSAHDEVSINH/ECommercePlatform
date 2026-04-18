@@ -5,10 +5,9 @@ using MediatR;
 
 namespace ECommercePlatform.Application.Features.Countries.Commands.Create;
 
-public record CreateCountryCommand(string Name, string Code) : IRequest<AppResult<CountryDto>>, ITransactionalBehavior, IAuditableCreateRequest
+public record CreateCountryCommand(string Name, string Code) : IRequest<AppResult<CountryDto>>, ITransactionalBehavior
 {
     public required string Name { get; init; } = Name?.Trim() ?? string.Empty;
     public required string Code { get; init; } = Code?.Trim() ?? string.Empty;
-    public string? CreatedBy { get; set; }
-    public DateTime CreatedOn { get; set; } = DateTime.Now;
+    public bool IsActive { get; init; }
 }

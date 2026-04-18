@@ -2,7 +2,7 @@
 
 namespace ECommercePlatform.Application.DTOs
 {
-    public class RolePermissionDto
+    public record RolePermissionDto
     {
         public Guid Id { get; init; }
         public Guid RoleId { get; init; }
@@ -33,7 +33,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class ModulePermissionDto
+    public record ModulePermissionDto
     {
         public required Guid ModuleId { get; init; }
         public bool CanView { get; init; }

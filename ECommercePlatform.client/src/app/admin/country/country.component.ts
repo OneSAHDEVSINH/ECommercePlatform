@@ -45,6 +45,9 @@ export class CountryComponent implements OnInit, OnDestroy {
   canDelete: boolean = false;
   canView: boolean = false;
 
+  // Filter properties
+  selectedStatusFilter: string = 'all';
+
   // Pagination properties
   pagedResponse: PagedResponse<Country> | null = null;
   pageRequest: PagedRequest = {
@@ -147,6 +150,8 @@ export class CountryComponent implements OnInit, OnDestroy {
 
   loadCountries(): void {
     this.loading = true;
+    const isActive = this.selectedStatusFilter === 'all' ? undefined :
+      this.selectedStatusFilter === 'active' ? true : false;
     this.countryService.getPagedCountries(this.pageRequest, false).subscribe({
       next: (response) => {
         this.pagedResponse = response;
@@ -185,7 +190,7 @@ export class CountryComponent implements OnInit, OnDestroy {
       modifiedOn: new Date(),
       modifiedBy: this.getUserIdentifier(),
       //modifiedBy: "System",
-      isActive: true,
+      //isActive: true,
       isDeleted: false
     };
 
@@ -251,7 +256,7 @@ export class CountryComponent implements OnInit, OnDestroy {
       //createdBy: this.isEditMode ? undefined : this.getUserIdentifier(),
       modifiedOn: new Date(),
       modifiedBy: this.getUserIdentifier(),
-      isActive: country.isActive !== undefined ? country.isActive : true,
+      isActive: country.isActive,
       isDeleted: false
     });
 

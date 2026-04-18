@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ECommercePlatform.Application.Features.Countries.Queries.GetPagedCountries
 {
-    public class GetPagedCountriesQuery : PagedRequest, IRequest<AppResult<PagedResponse<CountryDto>>>
+    public record GetPagedCountriesQuery : PagedRequest, IRequest<AppResult<PagedResponse<CountryDto>>>
     {
         public bool ActiveOnly { get; set; } = true;
     }

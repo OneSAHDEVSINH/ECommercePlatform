@@ -24,7 +24,7 @@ namespace ECommercePlatform.API.Middleware.Authorization
         //    await hubContext.Clients.Group($"user_{userId}").SendAsync("PermissionsUpdated", new
         //    {
         //        userId,
-        //        timestamp = DateTime.UtcNow
+        //        timestamp = DateTime.Now
         //    });
         //}
 
@@ -37,12 +37,14 @@ namespace ECommercePlatform.API.Middleware.Authorization
             // Get role permissions for these roles and the specified module
             var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                 .Include(rp => rp.Module)
+                .AsSplitQuery()
                 .Where(rp => roleIds.Contains(rp.RoleId) &&
                             rp.Module!.Name == moduleName &&
                             rp.Module.IsActive &&
                             !rp.Module.IsDeleted &&
                             rp.IsActive &&
                             !rp.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
 
             // Check if any role has the requested permission
@@ -64,11 +66,13 @@ namespace ECommercePlatform.API.Middleware.Authorization
             // Get all role permissions for these roles
             var rolePermissions = await _unitOfWork.RolePermissions.AsQueryable()
                 .Include(rp => rp.Module)
+                .AsSplitQuery()
                 .Where(rp => roleIds.Contains(rp.RoleId) &&
                             rp.Module!.IsActive &&
                             !rp.Module.IsDeleted &&
                             rp.IsActive &&
                             !rp.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
 
             // Group by module and aggregate permissions

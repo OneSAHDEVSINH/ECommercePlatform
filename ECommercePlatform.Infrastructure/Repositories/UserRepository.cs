@@ -1,4 +1,4 @@
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using ECommercePlatform.Application.Common.Helpers;
 using ECommercePlatform.Application.DTOs;
 using ECommercePlatform.Application.Interfaces.IRepositories;
@@ -19,6 +19,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
         public async Task<User?> FindUserByEmailAsync(string email)
         {
             return await _context.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email && !u.IsDeleted);
         }
 
@@ -27,6 +28,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
                     .ThenInclude(ur => ur.Role)
                         .ThenInclude(r => r!.RolePermissions)
                             .ThenInclude(rp => rp.Module)
+            .AsSplitQuery()
+            .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
 
         public new async Task<List<User>> GetAllAsync()
@@ -34,7 +37,9 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
+                .AsSplitQuery()
                 .Where(u => !u.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -43,6 +48,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.UserRoles)
                 .Where(u => u.UserRoles.Any(ur => ur.RoleId == roleId) && !u.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -51,7 +57,9 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Users
                 .Include(u => u.UserRoles)
                     .ThenInclude(ur => ur.Role)
+                    .AsSplitQuery()
                 .Where(u => u.IsActive && !u.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -138,7 +146,11 @@ namespace ECommercePlatform.Infrastructure.Repositories
 
             if (!string.IsNullOrEmpty(currentUserIdStr) && Guid.TryParse(currentUserIdStr, out var currentUserId))
             {
-                var currentUser = await _context.Users.FindAsync([currentUserId], cancellationToken: cancellationToken);
+                //var currentUser = await _context.Users.FindAsync([currentUserId], cancellationToken: cancellationToken);
+                var currentUser = await _context.Users
+                    .AsNoTracking().
+                    FirstOrDefaultAsync(u => u.Id == currentUserId, cancellationToken);
+
                 if (currentUser != null)
                 {
                     isSuperAdminViewing = _superAdminService.IsSuperAdminEmail(currentUser.Email!);
@@ -187,7 +199,9 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var queryWithInclude = includeRoles
                     ? query.Include(u => u.UserRoles)
                         .ThenInclude(ur => ur.Role)
-                    : query;
+                        .AsSplitQuery()
+                        .AsNoTracking()
+                    : query.AsNoTracking();
 
                 // Then apply search if text is provided
                 if (!string.IsNullOrWhiteSpace(searchText))
@@ -227,6 +241,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 var userRolesWithRoles = await _context.UserRoles
                     .Include(ur => ur.Role)
                     .Where(ur => userIds.Contains(ur.UserId) && !ur.IsDeleted && ur.IsActive && ur.Role!.IsActive && !ur.Role.IsDeleted)
+                    .AsNoTracking()
                     .ToListAsync(cancellationToken);
 
                 // Group by user ID for easy lookup

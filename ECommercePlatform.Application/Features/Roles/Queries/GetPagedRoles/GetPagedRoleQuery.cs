@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ECommercePlatform.Application.Features.Roles.Queries.GetPagedRoles
 {
-    public class GetPagedRolesQuery : PagedRequest, IRequest<AppResult<PagedResponse<RoleDto>>>
+    public record GetPagedRolesQuery : PagedRequest, IRequest<AppResult<PagedResponse<RoleDto>>>
     {
         public bool ActiveOnly { get; set; } = true;
     }

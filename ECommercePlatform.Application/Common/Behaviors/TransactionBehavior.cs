@@ -31,7 +31,7 @@ namespace ECommercePlatform.Application.Common.Behaviors
                 var response = await next(cancellationToken);
 
                 // If got here without exceptions, commit the transaction
-                await _unitOfWork.SaveChangesAsync();
+                //await _unitOfWork.SaveChangesAsync();
 
                 _logger.LogInformation("Transaction completed successfully for {RequestType}", typeof(TRequest).Name);
 

@@ -129,7 +129,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 (query, searchText) =>
             {
                 // First include the Country
-                var queryWithInclude = query.Include(s => s.Country);
+                var queryWithInclude = query.Include(s => s.Country).AsNoTracking();
 
                 // Then apply search if text is provided
                 if (!string.IsNullOrWhiteSpace(searchText))

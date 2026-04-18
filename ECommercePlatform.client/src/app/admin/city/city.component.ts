@@ -267,7 +267,7 @@ export class CityComponent implements OnInit, OnDestroy {
       createdBy: this.isEditMode ? undefined : this.getUserIdentifier(),
       modifiedOn: new Date(),
       modifiedBy: this.getUserIdentifier(),
-      isActive: true,
+      //isActive: true,
       isDeleted: false
     };
 

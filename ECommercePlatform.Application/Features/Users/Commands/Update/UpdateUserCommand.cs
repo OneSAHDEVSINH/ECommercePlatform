@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ECommercePlatform.Application.Features.Users.Commands.Update
 {
-    public record UpdateUserCommand(string FirstName, string LastName, string Email, string PhoneNumber, string DateOfBirth, string Bio) : IRequest<AppResult<UserDto>>, ITransactionalBehavior, IAuditableUpdateRequest
+    public record UpdateUserCommand(string FirstName, string LastName, string Email, string PhoneNumber, string DateOfBirth, string Bio) : IRequest<AppResult<UserDto>>, ITransactionalBehavior
     {
         public required Guid Id { get; init; }
         public string? FirstName { get; init; } = FirstName?.Trim() ?? string.Empty;
@@ -20,7 +20,5 @@ namespace ECommercePlatform.Application.Features.Users.Commands.Update
         public string? Bio { get; init; } = Bio?.Trim() ?? string.Empty;
         public List<Guid>? RoleIds { get; init; }
         public bool? IsActive { get; init; }
-        public string? ModifiedBy { get; set; }
-        public DateTime ModifiedOn { get; set; } = DateTime.UtcNow;
     }
 }

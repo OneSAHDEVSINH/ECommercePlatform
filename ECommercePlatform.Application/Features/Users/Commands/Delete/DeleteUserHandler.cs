@@ -79,7 +79,7 @@ namespace ECommercePlatform.Application.Features.Users.Commands.Delete
 //                user.IsDeleted = true;
 //                user.IsActive = false;
 //                user.ModifiedBy = "system"; // Should come from current user
-//                user.ModifiedOn = DateTime.UtcNow;
+//                user.ModifiedOn = DateTime.Now;
 
 //                var result = await _unitOfWork.UserManager.UpdateAsync(user);
 //                if (!result.Succeeded)

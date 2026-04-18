@@ -50,11 +50,12 @@ namespace ECommercePlatform.Application.Features.Users.Commands.Create
                     //DateOfBirth = request.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now.AddYears(-18)),
                     Bio = request.Bio,
                     IsActive = request.IsActive,
-                    CreatedBy = request.CreatedBy,
-                    CreatedOn = request.CreatedOn
+                    //CreatedBy = request.CreatedBy,
+                    //CreatedOn = request.CreatedOn
                 };
 
                 var result = await _unitOfWork.UserManager.CreateAsync(user, request.Password);
+                await _unitOfWork.Users.AddAsync(user);
                 if (!result.Succeeded)
                 {
                     var errors = string.Join(", ", result.Errors.Select(e => e.Description));

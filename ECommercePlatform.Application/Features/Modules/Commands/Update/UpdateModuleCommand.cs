@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ECommercePlatform.Application.Features.Modules.Commands.Update
 {
-    public record UpdateModuleCommand(string Name, string Route, string Description, string Icon) : IRequest<AppResult>, ITransactionalBehavior, IAuditableUpdateRequest
+    public record UpdateModuleCommand(string Name, string Route, string Description, string Icon) : IRequest<AppResult>, ITransactionalBehavior
     {
         public required Guid Id { get; init; }
         public string? Name { get; init; } = Name?.Trim() ?? string.Empty;
@@ -13,7 +13,5 @@ namespace ECommercePlatform.Application.Features.Modules.Commands.Update
         public string? Icon { get; init; } = Icon?.Trim() ?? string.Empty;
         public int DisplayOrder { get; init; }
         public bool IsActive { get; init; }
-        public string? ModifiedBy { get; set; }
-        public DateTime ModifiedOn { get; set; } = DateTime.UtcNow;
     }
 }

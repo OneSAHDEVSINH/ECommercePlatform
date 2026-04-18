@@ -16,6 +16,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Module)
+                    .AsSplitQuery()
+                    .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
         }
 
@@ -24,6 +26,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                 .Where(r => !r.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -32,6 +35,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Where(r => r.IsActive && !r.IsDeleted)
                 .OrderBy(r => r.Name)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -45,6 +49,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Module)
+                    .AsSplitQuery()
+                    .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
         }
 
@@ -93,6 +99,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
             return await _context.Roles
                 .Include(r => r.RolePermissions)
                     .ThenInclude(rp => rp.Module)
+                    .AsSplitQuery()
+                    .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id == id && !r.IsDeleted);
         }
 
@@ -126,7 +134,9 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 // First include related entities
                 var queryWithInclude = query
                     .Include(r => r.RolePermissions)
-                        .ThenInclude(rp => rp.Module); // Changed from rp.Permission
+                        .ThenInclude(rp => rp.Module)
+                        .AsSplitQuery()
+                        .AsNoTracking(); // Changed from rp.Permission
 
                 // Then apply search if text is provided
                 if (!string.IsNullOrWhiteSpace(searchText))

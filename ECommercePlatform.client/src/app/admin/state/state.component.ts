@@ -199,7 +199,7 @@ export class StateComponent implements OnInit, OnDestroy {
       id: this.isEditMode && this.currentStateId ? this.currentStateId : undefined,
       createdBy: this.isEditMode ? undefined : this.getUserIdentifier(),
       modifiedBy: this.getUserIdentifier(),
-      isActive: true,
+      //isActive: true,
       isDeleted: false
     };
 

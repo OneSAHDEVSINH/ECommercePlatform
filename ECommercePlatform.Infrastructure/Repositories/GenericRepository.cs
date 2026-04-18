@@ -14,14 +14,23 @@ namespace ECommercePlatform.Infrastructure.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);
-            await _context.SaveChangesAsync();
+            _context.Entry(entity).State = EntityState.Added;
+            //await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            _context.Set<T>().Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            //await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(T entity)
         {
             _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
+            _context.Entry(entity).State = EntityState.Deleted;
+            //await _context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
@@ -45,14 +54,8 @@ namespace ECommercePlatform.Infrastructure.Repositories
         {
             var entity = await _context.Set<T>().FindAsync(id)
                 ?? throw new InvalidOperationException($"Entity of type {typeof(T).Name} with ID {id} was not found.");
-            _context.Entry(entity).State = EntityState.Detached; // Detach the entity to avoid tracking issues
+            //_context.Entry(entity).State = EntityState.Detached; // Detach the entity to avoid tracking issues
             return entity;
-        }
-
-        public async Task UpdateAsync(T entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
         }
 
         // Streamlined paging method with support for search

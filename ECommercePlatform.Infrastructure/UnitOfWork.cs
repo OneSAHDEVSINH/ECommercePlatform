@@ -5,6 +5,7 @@ using ECommercePlatform.Application.Interfaces.IUserAuth;
 using ECommercePlatform.Domain.Entities;
 using ECommercePlatform.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommercePlatform.Infrastructure
 {
@@ -41,6 +42,8 @@ namespace ECommercePlatform.Infrastructure
         public IRoleRepository Roles => _roleRepository ??= new RoleRepository(_context);
 
         public IUserRoleRepository UserRoles => _userRoleRepository ??= new UserRoleRepository(_context);
+
+        public DbContext DbContext => _context;
 
 
         public UserManager<User> UserManager => _userManager;

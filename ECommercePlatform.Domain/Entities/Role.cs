@@ -5,9 +5,9 @@ namespace ECommercePlatform.Domain.Entities
     public class Role : IdentityRole<Guid>
     {
         public string? Description { get; set; }
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public DateTime CreatedOn { get; set; }
         public string? CreatedBy { get; set; }
-        public DateTime ModifiedOn { get; set; } = DateTime.Now;
+        public DateTime ModifiedOn { get; set; }
         public string? ModifiedBy { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; }
@@ -24,17 +24,14 @@ namespace ECommercePlatform.Domain.Entities
         public static Role Create(
             Guid id,
             string name,
-            string description,
-            string createdBy)
+            string description)
         {
             return new Role
             {
                 Id = id,
                 Name = name,
                 NormalizedName = name.ToUpper(),
-                Description = description,
-                CreatedBy = createdBy,
-                CreatedOn = DateTime.Now
+                Description = description
             };
         }
 

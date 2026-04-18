@@ -16,8 +16,11 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(ur => ur.Role)
                     .ThenInclude(r => r!.RolePermissions)
                         .ThenInclude(rp => rp.Module)
+                        .AsSplitQuery()
                 .Include(ur => ur.User)
+                .AsSplitQuery()
                 .Where(ur => ur.UserId == userId && !ur.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -27,6 +30,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
                 .Include(ur => ur.User)
                 .Include(ur => ur.Role)
                 .Where(ur => ur.RoleId == roleId && !ur.IsDeleted)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -34,6 +38,7 @@ namespace ECommercePlatform.Infrastructure.Repositories
         {
             var userRoles = await _context.UserRoles
                 .Where(ur => ur.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync();
 
             _context.UserRoles.RemoveRange(userRoles);

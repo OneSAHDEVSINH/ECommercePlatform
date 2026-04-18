@@ -3,10 +3,11 @@ using ECommercePlatform.Application.DTOs;
 using ECommercePlatform.Application.Interfaces;
 using ECommercePlatform.Application.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace ECommercePlatform.Application.Features.Users.Queries.GetPagedUsers
 {
-    public class GetPagedUsersHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetPagedUsersQuery, AppResult<PagedResponse<UserDto>>>
+    public class GetPagedUsersHandler(IUnitOfWork unitOfWork, ILogger<GetPagedUsersHandler> logger) : IRequestHandler<GetPagedUsersQuery, AppResult<PagedResponse<UserDto>>>
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 

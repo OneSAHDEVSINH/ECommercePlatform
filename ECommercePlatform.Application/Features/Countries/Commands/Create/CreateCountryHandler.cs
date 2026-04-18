@@ -20,7 +20,7 @@ public class CreateCountryHandler(IUnitOfWork unitOfWork) : IRequestHandler<Crea
                     .Bind(async tuple =>
                     {
                         var country = Country.Create(request.Name, request.Code);
-                        country.IsActive = true;
+                        country.IsActive = request.IsActive;
                         await _unitOfWork.Countries.AddAsync(country);
                         return Result.Success(country);
                     })

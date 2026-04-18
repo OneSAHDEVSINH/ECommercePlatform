@@ -2,7 +2,7 @@
 
 namespace ECommercePlatform.Application.DTOs
 {
-    public class UserRoleDto
+    public record UserRoleDto
     {
         public Guid Id { get; init; }
         public Guid UserId { get; init; }
@@ -31,7 +31,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class UserRoleListDto
+    public record UserRoleListDto
     {
         public Guid Id { get; init; }
         public Guid UserId { get; init; }

@@ -3,7 +3,7 @@ using ECommercePlatform.Domain.Entities;
 
 namespace ECommercePlatform.Application.DTOs
 {
-    public class ModuleDto
+    public record ModuleDto
     {
         public Guid Id { get; init; }
         public string? Name { get; init; }
@@ -31,7 +31,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class UpdateModuleDto
+    public record UpdateModuleDto
     {
         public string? Name { get; init; }
         public string? Description { get; init; }
@@ -54,7 +54,7 @@ namespace ECommercePlatform.Application.DTOs
         }
     }
 
-    public class ModuleListDto
+    public record ModuleListDto
     {
         public Guid Id { get; init; }
         public string? Name { get; init; }

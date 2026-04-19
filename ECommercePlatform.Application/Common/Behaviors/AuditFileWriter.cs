@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace ECommercePlatform.Application.AuditLogs;
+namespace ECommercePlatform.Application.Common.Behaviors;
 
 public static class AuditFileWriter
 {
